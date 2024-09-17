@@ -8,24 +8,44 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
-dotenv.config(); // Load environment variables
+// Load environment variables
+dotenv.config();
+
 const app = express();
 
-// Connect to database
+// Connect to the database
 connectDB();
 
-// Middleware
-app.use(cors({ origin: process.env.MAIN_URL, credentials: true }));
-app.use(express.json()); // Parse incoming JSON
+// Set up CORS to allow multiple origins
+const allowedOrigins = [
+  process.env.MAIN_URL, // Local React app
+  "https://your-vercel-app-url.vercel.app", // Your Vercel frontend URL (replace with actual)
+];
 
-// API Routes
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  }),
+);
+
+// Middleware to parse incoming JSON
+app.use(express.json());
+
+// Define API routes
 app.use("/api", userRoutes);
 app.use("/api", contactRoutes);
 app.use("/api", authRouter);
 app.use("/api", areaRoutes);
 app.use("/api", paymentRoutes);
 
-// Start server
+// Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
