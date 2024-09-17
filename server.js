@@ -19,7 +19,8 @@ connectDB();
 // Set up CORS to allow multiple origins
 const allowedOrigins = [
   process.env.MAIN_URL, // Local React app
-  "https://your-vercel-app-url.vercel.app", // Your Vercel frontend URL (replace with actual)
+  "https://flood-buddy.netlify.app", // Netlify frontend URL
+  "https://your-vercel-app-url.vercel.app", // Vercel frontend URL (replace with actual if applicable)
 ];
 
 app.use(
